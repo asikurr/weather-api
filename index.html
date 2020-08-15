@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input autocomplete="off" id="city" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <h3 id="not-a-city"></h3>
+                <div class="input-group-append">
+                    <button id="search-btn" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="weather-status text-white text-center">
+            <img id="icon-type" alt="">
+            <h1 id="city-name"></h1>
+            <h3 class="display-1 font-weight-bold"><span id="degree"></span>&deg;C</h3>
+            <h1 class="font-weight-bold" id="type"></h1>
+        </div>
+    </div>
+<script>
+    //set api
+    const weatherApi = {
+        key: "9c03ae49705801d954820517e5c354e8",
+        baseUrl:"https://api.openweathermap.org/data/2.5/weather"
+    }
+
+
+    document.getElementById('search-btn').addEventListener('click', ()=>{
+        const cityname = document.getElementById('city').value;
+        getApiData(cityname);
+    })
+
+    document.getElementById("city").addEventListener('keypress' ,(event) =>{
+    const cityname = document.getElementById("city").value;
+    if (event.keyCode == 13) {
+        // console.log(cityname);
+        getApiData(cityname);
+        
+    }
+    
+})
+
+
+    //get user data
+    function getApiData(city) {
+
+        fetch(`${weatherApi.baseUrl}?q=${city}&appid=${weatherApi.key}&units=metric`)
+        .then(res => res.json())
+        .then(data => showData(data))
+
+        return city;
+    }
+
+    // show city weather
+    function showData(weather) {
+        // console.log(weather)
+        document.getElementById('city-name').innerText = weather.name +", "+ weather.sys.country;
+        document.getElementById('degree').innerText = weather.main.temp;
+        document.getElementById('type').innerText = weather.weather[0].main;
+
+        const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`;
+        document.getElementById('icon-type').setAttribute('src', iconUrl);
+    }
+
+
+
+</script>
+</body>
+
+</html>
